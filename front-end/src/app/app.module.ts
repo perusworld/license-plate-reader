@@ -19,11 +19,13 @@ import { MatTableModule } from '@angular/material/table'
 import { MatPaginatorModule } from '@angular/material/paginator';
 import { MatSortModule } from '@angular/material/sort'
 import {MatProgressSpinnerModule} from '@angular/material/progress-spinner';
+import { ActivityLogComponent } from './activity-log/activity-log.component';
 
 @NgModule({
   declarations: [
     AppComponent,
-    MonitorComponent
+    MonitorComponent,
+    ActivityLogComponent
   ],
   imports: [
     BrowserModule,

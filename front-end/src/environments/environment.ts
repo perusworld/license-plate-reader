@@ -4,6 +4,7 @@
 
 export const environment = {
   production: false,
+  timezone: 'America/Los_Angeles',
   backendURL: 'http://192.168.0.152:8000',
   autoRefresh: 3000
 };
