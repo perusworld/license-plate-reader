@@ -16,16 +16,15 @@ al = ActivityLogger()
 app = Flask(__name__)
 CORS(app)
 
-vs = VideoStream(src=0).start()
-time.sleep(2.0)
-
 @app.route("/")
 def index():
 	return render_template("index.html")
 
-def detect_license(frameCount, where):
-	print(where)
+def detect_license(frameCount, where, camera):
 	global vs, outputFrame, lock, license, activity_log, al
+	print(f'Using camera -> {camera} and location -> {where}')
+	vs = VideoStream(src=camera).start()
+	time.sleep(2.0)
 
 	md = LicenseDetector()
 
@@ -82,6 +81,8 @@ if __name__ == '__main__':
 		help="ip address of the device")
 	ap.add_argument("-o", "--port", type=int, required=True,
 		help="ephemeral port number of the server (1024 to 65535)")
+	ap.add_argument("-c", "--camera", type=int, default = 0,
+		help="camera src (0 or 1)")
 	ap.add_argument("-f", "--frame-count", type=int, default=32,
 		help="# of frames used to construct the background model")
 	ap.add_argument("-w", "--where", type=str, default='Parking Lot #1',
@@ -89,7 +90,7 @@ if __name__ == '__main__':
 	args = vars(ap.parse_args())
 
 	t = threading.Thread(target=detect_license, args=(
-		args["frame_count"], args["where"]))
+		args["frame_count"], args["where"], args["camera"]))
 	t.daemon = True
 	t.start()
 
