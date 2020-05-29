@@ -75,6 +75,12 @@ def activity_log():
 	global al
 	return jsonify(al.activity_log[::-1])
 
+@app.route('/api/clear-activity-log')
+def clear_activity_log():
+	global al
+	al.clear()
+	return jsonify(done=True)
+
 if __name__ == '__main__':
 	ap = argparse.ArgumentParser()
 	ap.add_argument("-i", "--ip", type=str, required=True,

@@ -5,7 +5,7 @@ import { merge, Observable, of as observableOf, interval } from 'rxjs';
 import { catchError, map, startWith, switchMap, mapTo } from 'rxjs/operators';
 import { environment } from "src/environments/environment";
 import { HttpClient } from '@angular/common/http';
-import * as moment from 'moment';
+import { MatSnackBar } from '@angular/material/snack-bar';
 
 @Component({
   selector: 'app-activity-log',
@@ -25,7 +25,7 @@ export class ActivityLogComponent implements OnInit {
   @ViewChild(MatPaginator) paginator: MatPaginator;
   @ViewChild(MatSort) sort: MatSort;
 
-  constructor(private _httpClient: HttpClient) { }
+  constructor(private _httpClient: HttpClient, private _snackBar: MatSnackBar) { }
 
   ngAfterViewInit() {
     this.dataSource = new ActivityLogDataSource(this._httpClient);
@@ -55,7 +55,7 @@ export class ActivityLogComponent implements OnInit {
   }
 
   resetData() {
-    console.log('Reset');
+    this.dataSource.clearActivityLog().toPromise().then(resp => this._snackBar.open('Activity Log Cleared', null, { duration: 3000 }));
   }
 
   iconFor(activity: string) {
@@ -73,11 +73,20 @@ export interface ActivityLog {
   duration?: number
 }
 
+export interface Response {
+  done: boolean
+}
+
 export class ActivityLogDataSource {
   constructor(private _httpClient: HttpClient) { }
 
   getActivityLog(): Observable<ActivityLog[]> {
     const requestUrl = `${environment.backendURL}/api/activity-log`;
     return this._httpClient.get<ActivityLog[]>(requestUrl);
+  }
+
+  clearActivityLog(): Observable<Response> {
+    const requestUrl = `${environment.backendURL}/api/clear-activity-log`;
+    return this._httpClient.get<Response>(requestUrl);
   }
 }

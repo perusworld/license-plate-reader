@@ -5,6 +5,9 @@ EXITED = 'EXITED'
 PARKED = 'PARKED'
 class ActivityLogger:
 	def __init__(self):
+		self.clear()
+
+	def clear(self):
 		self.activity_log = []
 		self.license = None
 
