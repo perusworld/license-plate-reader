@@ -11,7 +11,6 @@ import cv2
 
 outputFrame = None
 lock = threading.Lock()
-al = ActivityLogger()
 
 app = Flask(__name__)
 CORS(app)
@@ -20,13 +19,14 @@ CORS(app)
 def index():
 	return render_template("index.html")
 
-def detect_license(frameCount, where, camera):
+def detect_license(frameCount, where, camera, noise):
 	global vs, outputFrame, lock, license, activity_log, al
-	print(f'Using camera -> {camera} and location -> {where}')
+	print(f'Using camera -> {camera}, location -> {where}, noise -> {noise}')
 	vs = VideoStream(src=camera).start()
 	time.sleep(2.0)
 
 	md = LicenseDetector()
+	al = ActivityLogger(noise)
 
 	while True:
 		frame = vs.read()
@@ -89,6 +89,8 @@ if __name__ == '__main__':
 		help="ephemeral port number of the server (1024 to 65535)")
 	ap.add_argument("-c", "--camera", type=int, default = 0,
 		help="camera src (0 or 1)")
+	ap.add_argument("-n", "--noise", type=int, default = 3,
+		help="noise threshold (3)")
 	ap.add_argument("-f", "--frame-count", type=int, default=32,
 		help="# of frames used to construct the background model")
 	ap.add_argument("-w", "--where", type=str, default='Parking Lot #1',
@@ -96,7 +98,7 @@ if __name__ == '__main__':
 	args = vars(ap.parse_args())
 
 	t = threading.Thread(target=detect_license, args=(
-		args["frame_count"], args["where"], args["camera"]))
+		args["frame_count"], args["where"], args["camera"], args["noise"]))
 	t.daemon = True
 	t.start()
 

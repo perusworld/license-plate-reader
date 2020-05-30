@@ -4,7 +4,8 @@ import math
 EXITED = 'EXITED'
 PARKED = 'PARKED'
 class ActivityLogger:
-	def __init__(self):
+	def __init__(self, noise):
+		self.noise = noise
 		self.clear()
 
 	def clear(self):
@@ -23,13 +24,18 @@ class ActivityLogger:
 	def close_activity_log(self):
 		current = self.activity_log[-1]
 		if EXITED != current['activity']:
-			self.activity_log.append({
-				'activity': EXITED,
-				'updated': datetime.datetime.now(),
-				'license': current['license'],
-				'where': current['where'],
-				'duration': math.floor((datetime.datetime.now() - current['updated']).total_seconds())
-			})
+			duration = math.floor((datetime.datetime.now() - current['updated']).total_seconds())
+			if self.noise < duration:
+				self.activity_log.append({
+					'activity': EXITED,
+					'updated': datetime.datetime.now(),
+					'license': current['license'],
+					'where': current['where'],
+					'duration': math.floor((datetime.datetime.now() - current['updated']).total_seconds())
+				})
+			else:
+				print(f'Looks like noise removing it')
+				self.activity_log.pop()
 
 	def update_activity_log(self, license, where):
 		self.license = license
