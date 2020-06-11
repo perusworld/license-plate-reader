@@ -1,12 +1,14 @@
 import datetime
 import math
+from .apilogger import APILogger
 
 EXITED = 'EXITED'
 PARKED = 'PARKED'
 class ActivityLogger:
-	def __init__(self, noise):
+	def __init__(self, noise, location, endpoint):
 		self.noise = noise
 		self.clear()
+		self.api_log = APILogger(endpoint, location)
 
 	def clear(self):
 		self.activity_log = []
@@ -31,8 +33,12 @@ class ActivityLogger:
 					'updated': datetime.datetime.now(),
 					'license': current['license'],
 					'where': current['where'],
-					'duration': math.floor((datetime.datetime.now() - current['updated']).total_seconds())
+					'duration': duration
 				})
+				try:
+					self.api_log.send_request(current['license'], current['where'], duration)
+				except:
+					print("An exception occurred while calling api")
 			else:
 				print(f'Looks like noise removing it')
 				self.activity_log.pop()

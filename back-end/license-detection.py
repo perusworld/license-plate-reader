@@ -19,14 +19,14 @@ CORS(app)
 def index():
 	return render_template("index.html")
 
-def detect_license(frameCount, where, camera, noise):
+def detect_license(frameCount, endpoint, where, location, camera, noise):
 	global vs, outputFrame, lock, license, activity_log, al
-	print(f'Using camera -> {camera}, location -> {where}, noise -> {noise}')
+	print(f'Using camera -> {camera}, \n\tendpoint -> {endpoint}, \n\tlocation -> {location}@{where}, \n\tnoise -> {noise}')
 	vs = VideoStream(src=camera).start()
 	time.sleep(2.0)
 
 	md = LicenseDetector()
-	al = ActivityLogger(noise)
+	al = ActivityLogger(noise, location, endpoint)
 
 	while True:
 		frame = vs.read()
@@ -34,15 +34,17 @@ def detect_license(frameCount, where, camera, noise):
 		timestamp = datetime.datetime.now()
 		license = md.license_detect(frame)
 		al.update_activity_log(license, where)
+		cv2.putText(frame, f'{where}@{location}', (100, 15),
+			cv2.FONT_HERSHEY_SIMPLEX, 0.50, (255, 255, 255), 1)
 		if license is None:
-			cv2.putText(frame, "No Car", (frame.shape[1] - 60, 15),
-				cv2.FONT_HERSHEY_SIMPLEX, 0.35, (0, 0, 255), 1)
+			cv2.putText(frame, "No Car", (frame.shape[1] - 80, 15),
+				cv2.FONT_HERSHEY_SIMPLEX, 0.50, (0, 0, 255), 1)
 		else:
-			cv2.putText(frame, license, (frame.shape[1] - 60, 15),
-				cv2.FONT_HERSHEY_SIMPLEX, 0.35, (0, 255, 255), 1)
+			cv2.putText(frame, license, (frame.shape[1] - 80, 15),
+				cv2.FONT_HERSHEY_SIMPLEX, 0.50, (0, 255, 255), 1)
 		cv2.putText(frame, timestamp.strftime(
 			"%A %d %B %Y %I:%M:%S%p"), (10, frame.shape[0] - 10),
-			cv2.FONT_HERSHEY_SIMPLEX, 0.35, (0, 255, 0), 1)
+			cv2.FONT_HERSHEY_SIMPLEX, 0.50, (0, 255, 0), 1)
 		with lock:
 			outputFrame = frame.copy()
 		
@@ -94,11 +96,15 @@ if __name__ == '__main__':
 	ap.add_argument("-f", "--frame-count", type=int, default=32,
 		help="# of frames used to construct the background model")
 	ap.add_argument("-w", "--where", type=str, default='Parking Lot #1',
-		help="Location of the camera to tag")
+		help="Location of this camera to tag")
+	ap.add_argument("-l", "--location", type=str, default='Airport',
+		help="Location of this set of cameras")
+	ap.add_argument("-e", "--endpoint", type=str, default='',
+		help="API Logger Endpoint")
 	args = vars(ap.parse_args())
 
 	t = threading.Thread(target=detect_license, args=(
-		args["frame_count"], args["where"], args["camera"], args["noise"]))
+		args["frame_count"], args["endpoint"], args["where"], args["location"], args["camera"], args["noise"]))
 	t.daemon = True
 	t.start()
 
