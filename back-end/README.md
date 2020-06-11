@@ -1,6 +1,6 @@
 # License Plate Reader Backend
 
-Requires opencv, flask, imutils, expiringdict, openalpr, requests
+Requires opencv, flask, imutils, expiringdict, openalpr, requests, numpy
 
 ## Development server
 ```bash

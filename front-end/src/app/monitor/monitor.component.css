@@ -9,3 +9,7 @@
   right: 5px;
 }
 
+.actions Button {
+  position: absolute;
+  top: 7px;
+}

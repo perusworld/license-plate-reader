@@ -4,6 +4,11 @@
     <mat-grid-tile>
       <mat-card class="dashboard-card">
         <mat-card-header>
+          <div class="actions">
+            <button mat-icon-button color="warn" aria-label="Record" (click)="toggleRecord()">
+              <mat-icon>{{buttonIcon}}</mat-icon>
+            </button>
+          </div>
           <mat-card-title>
             Video Feed
           </mat-card-title>
