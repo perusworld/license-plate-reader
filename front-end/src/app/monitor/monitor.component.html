@@ -1,5 +1,22 @@
 <div class="grid-container">
-  <h1 class="mat-h1">License Plate Reader</h1>
+  <mat-toolbar color="primary" class="expanded-toolbar">
+    <span>
+      <button mat-button routerLink="/">
+        <mat-icon>home</mat-icon>
+      </button>
+      <button mat-button routerLink="/">License Plate Reader</button>
+    </span>
+    <div fxLayout="row" fxLayoutAlign="end center" fxFlex="grow">
+
+      <mat-slide-toggle color="accent" (click)="toggleDemo()">
+        {{mode}}
+      </mat-slide-toggle>
+
+      <button *ngIf="demoMode" mat-icon-button color="accent" aria-label="Reset Demo" (click)="resetDemo()">
+        <mat-icon>refresh</mat-icon>
+      </button>
+    </div>
+  </mat-toolbar>
   <mat-grid-list cols="3">
     <mat-grid-tile>
       <mat-card class="dashboard-card">
@@ -13,11 +30,15 @@
             Video Feed
           </mat-card-title>
         </mat-card-header>
-        <img mat-card-image [src]="feedURL">
+        <img *ngIf="!demoMode" mat-card-image [src]="feedURL">
+        <video id="demoVideo" *ngIf="demoMode" mat-card-image autoplay (playing)="playing()">
+          <source [src]="videoURL" type="video/mp4">
+          Your browser does not support the video tag.
+        </video>
       </mat-card>
     </mat-grid-tile>
     <mat-grid-tile colspan="2">
-      <app-activity-log class="dashboard-card"></app-activity-log>
+      <app-activity-log class="dashboard-card" [demoMode]="demoMode" [beginDemo]="beginDemo"></app-activity-log>
     </mat-grid-tile>
   </mat-grid-list>
 </div>

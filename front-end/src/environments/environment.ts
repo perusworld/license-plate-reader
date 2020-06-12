@@ -6,7 +6,15 @@ export const environment = {
   production: false,
   timezone: 'America/Los_Angeles',
   backendURL: 'http://192.168.0.152:8000',
-  autoRefresh: 3000
+  autoRefresh: 3000,
+  demoMode: true,
+  demoVideoURL: 'http://192.168.0.120:8080/Demo.mp4',
+  demo: {
+    offSets: [6, 18, 24, 36],
+    licenses: ['MCLABS3', 'MCLABS4'],
+    where: 'Parking Lot #1',
+    durations: [12, 9]
+  }
 };
 
 /*

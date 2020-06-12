@@ -21,6 +21,8 @@ import { MatSortModule } from '@angular/material/sort'
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { ActivityLogComponent } from './activity-log/activity-log.component';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
+import { FlexLayoutModule } from '@angular/flex-layout';
+import {MatSlideToggleModule} from '@angular/material/slide-toggle';
 
 @NgModule({
   declarations: [
@@ -46,7 +48,9 @@ import { MatSnackBarModule } from '@angular/material/snack-bar';
     MatPaginatorModule,
     MatSortModule,
     MatProgressSpinnerModule,
-    MatSnackBarModule
+    MatSnackBarModule,
+    FlexLayoutModule,
+    MatSlideToggleModule
   ],
   providers: [],
   bootstrap: [AppComponent]

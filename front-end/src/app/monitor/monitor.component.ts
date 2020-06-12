@@ -1,12 +1,14 @@
-import { Component } from '@angular/core';
+import { Component, } from '@angular/core';
 import { environment } from "src/environments/environment";
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { HttpClient } from '@angular/common/http';
-import { Observable } from 'rxjs';
+import { Observable, of } from 'rxjs';
 
 
 const RECORD = 'fiber_manual_record';
 const STOP = 'stop';
+const LIVE = 'Live Mode';
+const DEMO = 'Demo Mode';
 
 @Component({
   selector: 'app-monitor',
@@ -16,11 +18,16 @@ const STOP = 'stop';
 export class MonitorComponent {
   recordingService: VideoRecordService | null;
   buttonIcon = RECORD;
+  demoMode = environment.demoMode;
+  beginDemo = null;
+  videoURL = environment.demoVideoURL;
   feedURL = `${environment.backendURL}/video-feed`;
+  mode = DEMO;
+
   constructor(private _httpClient: HttpClient, private _snackBar: MatSnackBar) { }
 
   ngAfterViewInit() {
-    this.recordingService = new VideoRecordService(this._httpClient);
+    this.recordingService = new VideoRecordService(this._httpClient, this.demoMode);
   }
 
   toggleRecord() {
@@ -34,6 +41,26 @@ export class MonitorComponent {
     }
   }
 
+  toggleDemo() {
+    this.demoMode = !this.demoMode;
+    this.mode = this.demoMode ? DEMO : LIVE;
+    this.recordingService.demo = this.demoMode;
+  }
+
+  resetDemo() {
+    this._snackBar.open('Resetting Demo', null, { duration: 3000 });
+    if (this.demoMode) {
+      let lst = document.getElementsByTagName('video');
+      if (null != lst && 0 < lst.length) {
+        lst[0].load();
+      }
+    }
+  }
+
+  playing() {
+    this.beginDemo = new Date();
+  }
+
 }
 
 export interface Response {
@@ -41,14 +68,22 @@ export interface Response {
 }
 
 export class VideoRecordService {
-  constructor(private _httpClient: HttpClient) { }
+  constructor(private _httpClient: HttpClient, public demo: boolean) { }
 
   startRecording(): Observable<Response> {
-    return this.callApi('start-recording');
+    if (this.demo) {
+      return of({ done: true });
+    } else {
+      return this.callApi('start-recording');
+    }
   }
 
   stopRecording(): Observable<Response> {
-    return this.callApi('stop-recording');
+    if (this.demo) {
+      return of({ done: true });
+    } else {
+      return this.callApi('stop-recording');
+    }
   }
 
   callApi(activity: string): Observable<Response> {
