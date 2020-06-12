@@ -49,7 +49,7 @@ def write_frame(frame):
 		print("An exception occurred while writing frame")
 
 
-def detect_license(_fps, endpoint, where, location, camera, noise, codec):
+def detect_license(_fps, endpoint, where, location, camera, noise, codec, notimestamp):
 	global vs, outputFrame, lock, license, activity_log, al, fourcc, writer, fps, h, w, zeros
 	print(f'Using camera -> {camera}, \n\tendpoint -> {endpoint}, \n\tlocation -> {location}@{where}, \n\tnoise -> {noise}, \n\tfps -> {_fps}, \n\tcodec -> {codec}')
 	fps = _fps
@@ -75,9 +75,10 @@ def detect_license(_fps, endpoint, where, location, camera, noise, codec):
 		else:
 			cv2.putText(frame, license, (frame.shape[1] - 80, 15),
 				cv2.FONT_HERSHEY_SIMPLEX, 0.50, (0, 255, 255), 1)
-		cv2.putText(frame, timestamp.strftime(
-			"%A %d %B %Y %I:%M:%S%p"), (10, frame.shape[0] - 10),
-			cv2.FONT_HERSHEY_SIMPLEX, 0.50, (0, 255, 0), 1)
+		if not notimestamp:
+			cv2.putText(frame, timestamp.strftime(
+				"%A %d %B %Y %I:%M:%S%p"), (10, frame.shape[0] - 10),
+				cv2.FONT_HERSHEY_SIMPLEX, 0.50, (0, 255, 0), 1)
 
 		if zeros is None:
 			(h, w) = frame.shape[:2]
@@ -152,10 +153,11 @@ if __name__ == '__main__':
 		help="Location of this set of cameras")
 	ap.add_argument("-e", "--endpoint", type=str, default='',
 		help="API Logger Endpoint")
+	ap.add_argument("--notimestamp", help='Donot add timestamp to the output', action="store_true")
 	args = vars(ap.parse_args())
 
 	t = threading.Thread(target=detect_license, args=(
-		args["fps"], args["endpoint"], args["where"], args["location"], args["camera"], args["noise"], args["codec"]))
+		args["fps"], args["endpoint"], args["where"], args["location"], args["camera"], args["noise"], args["codec"], args["notimestamp"]))
 	t.daemon = True
 	t.start()
 
