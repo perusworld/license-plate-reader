@@ -1,4 +1,71 @@
 @import '@angular/material/prebuilt-themes/pink-bluegrey.css';
 
-html, body { height: 100%; }
-body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
+html,
+body {
+  height: 100%;
+}
+
+body {
+  margin: 0;
+  font-family: Roboto, "Helvetica Neue", sans-serif;
+}
+
+
+table {
+  width: 100%;
+}
+
+.more-button {
+  position: absolute !important;
+  top: 5px;
+  right: 10px;
+}
+
+.log-container {
+  position: relative;
+  min-height: 200px;
+}
+
+.log-table-container {
+  position: relative;
+  max-height: 400px;
+  overflow: auto;
+}
+
+.log-loading-shade {
+  position: absolute;
+  top: 0;
+  left: 0;
+  bottom: 56px;
+  right: 0;
+  background: rgba(0, 0, 0, 0.15);
+  z-index: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.mat-column-number,
+.mat-column-state {
+  max-width: 64px;
+}
+
+.mat-column-created {
+  max-width: 124px;
+}
+
+.grid-container {
+  margin: 20px;
+}
+
+mat-card.dashboard-card, app-parking-activity-log.dashboard-card {
+  position: absolute;
+  top: 15px;
+  left: 5px;
+  right: 5px;
+}
+
+.actions Button {
+  position: absolute;
+  top: 7px;
+}

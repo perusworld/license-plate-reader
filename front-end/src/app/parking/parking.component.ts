@@ -3,31 +3,32 @@ import { environment } from "src/environments/environment";
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { HttpClient } from '@angular/common/http';
 import { Observable, of } from 'rxjs';
+import { DemoAwareComponent } from '../demo-aware-component';
+import { MonitorService } from '../monitor.service';
 
 
 const RECORD = 'fiber_manual_record';
 const STOP = 'stop';
-const LIVE = 'Live Mode';
-const DEMO = 'Demo Mode';
 
 @Component({
-  selector: 'app-monitor',
-  templateUrl: './monitor.component.html',
-  styleUrls: ['./monitor.component.css']
+  selector: 'app-parking',
+  templateUrl: './parking.component.html',
+  styleUrls: ['./parking.component.css']
 })
-export class MonitorComponent {
+export class ParkingComponent extends DemoAwareComponent {
   recordingService: VideoRecordService | null;
   buttonIcon = RECORD;
-  demoMode = environment.demoMode;
   beginDemo = null;
   videoURL = environment.demoVideoURL;
   feedURL = `${environment.backendURL}/video-feed`;
-  mode = DEMO;
+  activityDemoDataSet = environment.demo.parking;
 
-  constructor(private _httpClient: HttpClient, private _snackBar: MatSnackBar) { }
+  constructor(private _httpClient: HttpClient, private _snackBar: MatSnackBar, public monitorSvc: MonitorService) {
+    super(monitorSvc);
+  }
 
   ngAfterViewInit() {
-    this.recordingService = new VideoRecordService(this._httpClient, this.demoMode);
+    this.recordingService = new VideoRecordService(this._httpClient, this.monitorSvc.demoMode);
   }
 
   toggleRecord() {
@@ -41,24 +42,21 @@ export class MonitorComponent {
     }
   }
 
-  toggleDemo() {
-    this.demoMode = !this.demoMode;
-    this.mode = this.demoMode ? DEMO : LIVE;
-    this.recordingService.demo = this.demoMode;
+  playing() {
+    this.beginDemo = new Date();
   }
 
-  resetDemo() {
-    this._snackBar.open('Resetting Demo', null, { duration: 3000 });
-    if (this.demoMode) {
-      let lst = document.getElementsByTagName('video');
-      if (null != lst && 0 < lst.length) {
-        lst[0].load();
-      }
+  onDemoMode(isDemo: boolean) {
+    if (null != this.recordingService) {
+      this.recordingService.demo = isDemo;
     }
   }
 
-  playing() {
-    this.beginDemo = new Date();
+  onResetDemo() {
+    let lst = document.getElementsByTagName('video');
+    if (null != lst && 0 < lst.length) {
+      lst[0].load();
+    }
   }
 
 }
@@ -90,4 +88,8 @@ export class VideoRecordService {
     const requestUrl = `${environment.backendURL}/api/${activity}`;
     return this._httpClient.get<Response>(requestUrl);
   }
+
 }
+
+
+

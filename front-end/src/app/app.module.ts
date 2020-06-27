@@ -14,21 +14,23 @@ import { LayoutModule } from '@angular/cdk/layout';
 import { MatToolbarModule } from '@angular/material/toolbar';
 import { MatSidenavModule } from '@angular/material/sidenav';
 import { MatListModule } from '@angular/material/list';
-import { MonitorComponent } from './monitor/monitor.component';
 import { MatTableModule } from '@angular/material/table'
 import { MatPaginatorModule } from '@angular/material/paginator';
 import { MatSortModule } from '@angular/material/sort'
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
-import { ActivityLogComponent } from './activity-log/activity-log.component';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { FlexLayoutModule } from '@angular/flex-layout';
-import {MatSlideToggleModule} from '@angular/material/slide-toggle';
+import { MatSlideToggleModule } from '@angular/material/slide-toggle';
+import { ParkingComponent } from './parking/parking.component';
+import { ParkingActivityLogComponent } from './parking-activity-log/parking-activity-log.component';
+import { HomeComponent } from './home/home.component';
 
 @NgModule({
   declarations: [
     AppComponent,
-    MonitorComponent,
-    ActivityLogComponent
+    ParkingComponent,
+    ParkingActivityLogComponent,
+    HomeComponent,
   ],
   imports: [
     BrowserModule,

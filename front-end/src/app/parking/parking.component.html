@@ -1,0 +1,25 @@
+<mat-grid-list cols="4">
+  <mat-grid-tile>
+    <mat-card class="dashboard-card">
+      <mat-card-header>
+        <div class="actions">
+          <button mat-icon-button color="warn" aria-label="Record" (click)="toggleRecord()">
+            <mat-icon>{{buttonIcon}}</mat-icon>
+          </button>
+        </div>
+        <mat-card-title>
+          Video Feed
+        </mat-card-title>
+      </mat-card-header>
+      <img *ngIf="!monitorSvc?.demoMode" mat-card-image [src]="feedURL">
+      <video id="demoVideo" *ngIf="monitorSvc?.demoMode" mat-card-image autoplay (playing)="playing()">
+        <source [src]="videoURL" type="video/mp4">
+        Your browser does not support the video tag.
+      </video>
+    </mat-card>
+  </mat-grid-tile>
+  <mat-grid-tile colspan="3">
+    <app-parking-activity-log [demoDataSet]="activityDemoDataSet" class="dashboard-card" [beginDemo]="beginDemo">
+    </app-parking-activity-log>
+  </mat-grid-tile>
+</mat-grid-list>
