@@ -1,0 +1,7 @@
+opencv-contrib-python
+flask
+imutils
+expiringdict
+openalpr
+requests
+numpy
