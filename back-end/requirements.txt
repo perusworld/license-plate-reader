@@ -1,7 +1,8 @@
-opencv-contrib-python
+opencv-python-headless
 flask
 imutils
 expiringdict
 openalpr
 requests
 numpy
+flask_cors
