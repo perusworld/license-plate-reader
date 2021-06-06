@@ -1,4 +1,4 @@
-import { ViewChild, Input } from '@angular/core';
+import { ViewChild, Input, Directive } from '@angular/core';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort'
 import { merge, Observable, of as observableOf, interval, of } from 'rxjs';
@@ -9,6 +9,7 @@ import { DemoAwareComponent } from './demo-aware-component';
 import { MonitorService } from './monitor.service';
 import * as moment from 'moment-timezone';
 
+@Directive()
 export abstract class DataPollComponent<T = any> extends DemoAwareComponent {
     dataSource: PollDataProvider<T> | null;
     dummyDataSource: DummyPollDataProvider<T> | null;

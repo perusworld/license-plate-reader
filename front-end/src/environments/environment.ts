@@ -5,7 +5,7 @@
 export const environment = {
   production: false,
   timezone: 'America/Los_Angeles',
-  backendURL: 'http://192.168.0.152:8000',
+  backendURL: 'http://192.168.0.142:8000/',
   autoRefresh: 3000,
   demoMode: true,
   demoVideoURL: 'http://localhost:8080/demo.mp4',

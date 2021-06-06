@@ -1,8 +1,9 @@
-import { OnInit, OnDestroy, Input } from '@angular/core';
+import { OnInit, OnDestroy, Input, Directive } from '@angular/core';
 import { Subscription } from 'rxjs';
 import { MonitorService } from './monitor.service';
 
-export class DemoAwareComponent implements OnInit, OnDestroy {
+@Directive()
+export abstract class DemoAwareComponent implements OnInit, OnDestroy {
 
     private demoModeRef: Subscription = null
     private resetDemoRef: Subscription = null

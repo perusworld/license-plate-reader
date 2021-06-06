@@ -12,7 +12,7 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 })
 export class AppComponent extends DemoAwareComponent {
   public demoMode = false;
-  title = 'License Plate Reader';
+  _title = 'License Plate Reader';
 
   constructor(private _snackBar: MatSnackBar, public monitorSvc: MonitorService) {
     super(monitorSvc);
