@@ -1,12 +1,11 @@
 import numpy as np
-import imutils
 from expiringdict import ExpiringDict
-import cv2
 from openalpr import Alpr
 import sys
 
 class LicenseDetector:
-	def __init__(self):
+	def __init__(self, runtime_data = '/usr/share/openalpr/runtime_data/'):
+		self.runtime_data = runtime_data
 		self.cache = ExpiringDict(max_len=100, max_age_seconds=5)
 		self.init_alpr()
 
@@ -22,7 +21,7 @@ class LicenseDetector:
 		return (sort_orders[0][0] if sort_orders else None)
 	
 	def init_alpr(self):
-		self.alpr = Alpr("us", "/etc/openalpr/openalpr.conf", "/home/pi/openalpr/runtime_data")
+		self.alpr = Alpr("us", "/etc/openalpr/openalpr.conf", self.runtime_data)
 		if not self.alpr.is_loaded():
 			print("Error loading OpenALPR")
 			sys.exit(1)
